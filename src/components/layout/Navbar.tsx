@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

@@ -41,76 +41,84 @@ export function ContactForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    return (
-      <section className="py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Send a Message</CardTitle>
-            <CardDescription>
-              Fill out the form below and I'll get back to you as soon as
-              possible.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name Field */}
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="Your name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Email Field */}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="your.email@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Message Field */}
-              <div className="space-y-2">
-                <Label htmlFor="message">Message</Label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  placeholder="Tell me about your project or inquiry..."
-                  rows={6}
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Submit Button */}
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <span className="mr-2">Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Message
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </section>
-    );
+    // TODO: Add form submission logic (e.g., API call, email service)
+    // For MVP, just simulate a delay
+    setTimeout(() => {
+      setIsSubmitting(false);
+      // Reset form after successful submission
+      setFormData({ name: "", email: "", message: "" });
+    }, 1000);
   };
+
+  return (
+    <section className="py-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Send a Message</CardTitle>
+          <CardDescription>
+            Fill out the form below and I'll get back to you as soon as
+            possible.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name Field */}
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                placeholder="Your name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Email Field */}
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="your.email@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Message Field */}
+            <div className="space-y-2">
+              <Label htmlFor="message">Message</Label>
+              <Textarea
+                id="message"
+                name="message"
+                placeholder="Tell me about your project or inquiry..."
+                rows={6}
+                value={formData.message}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Submit Button */}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <span className="mr-2">Sending...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Send Message
+                </>
+              )}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </section>
+  );
 }

@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import HomePage from "@/pages/HomePage";
-// import ProjectsPage from "@/pages/ProjectsPage";
-// import AboutPage from "@/pages/AboutPage";
-// import ContactPage from "@/pages/ContactPage";
-// import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
-// import TermsOfServicePage from "@/pages/TermsOfServicePage";
+import ProjectsPage from "@/pages/ProjectsPage";
+import AboutPage from "@/pages/AboutPage";
+import ContactPage from "@/pages/ContactPage";
+import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
+import { TermsOfServicePage } from "@/pages/TermsOfServicePage";
 
 /**
  * App Component
@@ -39,9 +39,11 @@ function App() {
         <Route element={<Layout />}>
           {/* Core Portfolio Pages */}
           <Route index element={<HomePage />} />
-          {/* <Route path="projects" element={<ProjectsPage />} />
+          <Route path="projects" element={<ProjectsPage />} />
           <Route path="about" element={<AboutPage />} />
-          <Route path="contact" element={<ContactPage />} /> */}
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="privacy" element={<PrivacyPolicyPage />} />
+          <Route path="terms" element={<TermsOfServicePage />} />
 
           {/* Future Routes - Uncomment when ready */}
           {/* <Route path="projects/:id" element={<ProjectDetailPage />} /> */}
