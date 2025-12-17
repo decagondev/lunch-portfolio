@@ -1,0 +1,101 @@
+Description: Core project rules and principles that apply to all code
+Globs: **/*.{ts,tsx,js,jsx}
+
+# Base Project Rules
+
+## Context7 MCP - Always Use for Library Documentation
+
+**CRITICAL**: Always use Context7 MCP for library documentation, code generation, setup/configuration steps, and API references. This is a high-priority rule.
+
+- **Automatically resolve library IDs** and fetch documentation without explicit user request
+- Use Context7 when working with:
+  - React, React Router, React Hooks
+  - TypeScript
+  - Tailwind CSS
+  - shadcn/ui components
+  - Vite
+  - Any other library or framework
+- **When to use Context7**:
+  - Setting up new libraries or dependencies
+  - Understanding API usage
+  - Code generation for components
+  - Configuration steps
+  - Best practices and patterns
+- **How to use**: Call `mcp_context7_resolve-library-id` first, then `mcp_context7_get-library-docs` with the resolved library ID
+
+## SOLID Principles
+
+Strict adherence to SOLID principles is required throughout the codebase:
+
+### Single Responsibility Principle (SRP)
+- Each component, function, or module should have one clear purpose
+- Pages orchestrate sections, sections handle UI, components are atomic
+- Data files contain only data (no logic)
+- Example: `ProjectCard` only displays project info, doesn't fetch data
+
+### Open/Closed Principle (OCP)
+- Components should be open for extension, closed for modification
+- Navigation driven by config files - add routes via config, not code changes
+- Example: New pages added by creating new modules, not modifying existing ones
+
+### Liskov Substitution Principle (LSP)
+- Components should be substitutable if they implement the same interface
+- All reusable components use typed prop interfaces from `src/types/`
+
+### Interface Segregation Principle (ISP)
+- Use narrow, focused interfaces
+- Components should only receive props they need
+- Example: `Project` interface has optional fields (`thumbnail?`, `demoUrl?`)
+
+### Dependency Inversion Principle (DIP)
+- Depend on abstractions, not concretions
+- Pages depend on data abstractions (imported arrays), not hard-coded content
+- Components depend on config objects, not hard-coded values
+- Example: `HeroSection` uses `siteConfig`, not hard-coded strings
+
+## TypeScript Standards
+
+- **Strict Mode**: Always enabled
+- **Type Safety**: Full type coverage required
+- **Interfaces**: Define in `src/types/index.ts` for shared types
+- **Narrow Types**: Use specific types, avoid `any`
+- **Optional Properties**: Use `?` for optional fields
+- **Readonly**: Use `readonly` or `as const` for immutable data
+
+## File Organization
+
+- **Components**: `src/components/` with subdirectories:
+  - `layout/`: Layout components (Navbar, Sidebar, Footer, Layout)
+  - `ui/`: Atomic reusable components (ProjectCard, SocialLinks, etc.)
+  - `sections/`: Composable page sections (HeroSection, ProjectsTeaser, etc.)
+  - `seo/`: SEO-related components
+- **Config**: `src/config/` - all configuration files
+- **Data**: `src/data/` - static data files (pure data, no logic)
+- **Types**: `src/types/` - shared TypeScript interfaces
+- **Pages**: `src/pages/` - thin page containers
+- **Contexts**: `src/contexts/` - React contexts
+- **Lib**: `src/lib/` - utility functions
+
+## Code Style
+
+- **Path Aliases**: Use `@/` prefix for imports from `src/`
+- **Naming**: PascalCase for components, camelCase for functions/variables
+- **Comments**: JSDoc comments for components and complex functions
+- **Exports**: Named exports preferred, default exports for pages only
+- **Formatting**: Consistent with project ESLint/Prettier config
+
+## Import Order
+
+1. React and React-related imports
+2. Third-party library imports
+3. Internal component imports (using `@/` alias)
+4. Type imports (using `type` keyword)
+5. Relative imports
+
+Example:
+```typescript
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import type { Project } from "@/types";
+```

@@ -1,0 +1,213 @@
+Description: Architecture patterns and design decisions for the portfolio
+Globs: src/**/*.{ts,tsx}
+
+# Architecture Patterns
+
+## Modular Architecture
+
+The portfolio follows a **highly modular architecture** with clear separation of concerns:
+
+### Component Hierarchy
+
+```
+Layout (wraps all routes)
+├── Navbar (sticky, desktop)
+├── Sidebar (mobile, collapsible)
+├── Outlet (page content)
+│   └── Pages (thin containers)
+│       ├── SEO component
+│       └── Sections (composable UI blocks)
+└── Footer
+```
+
+### Thin Page Containers
+
+Pages are **thin orchestrators** that only compose sections and SEO:
+
+```typescript
+// ✅ Good: Page only orchestrates
+export default function HomePage() {
+  return (
+    <>
+      <SEO {...homeSeo} />
+      <HeroSection />
+      <ProjectsTeaser projects={projects} limit={3} />
+    </>
+  );
+}
+
+// ❌ Bad: Page contains UI logic
+export default function HomePage() {
+  return (
+    <div className="container">
+      <h1>{siteConfig.name}</h1>
+      {/* UI logic in page */}
+    </div>
+  );
+}
+```
+
+### Composable Sections
+
+Sections are **reusable UI blocks** that handle specific layout and styling:
+
+- Accept data via props
+- Handle their own styling and layout
+- Can be used across multiple pages
+- Examples: `HeroSection`, `ProjectsTeaser`, `ProjectsGrid`, `BioSection`
+
+### Atomic Components
+
+Components in `ui/` are **small, focused, and reusable**:
+
+- Single responsibility
+- Typed props from `src/types/`
+- No business logic
+- Examples: `ProjectCard`, `SocialLinks`, `SkillBadge`
+
+## Config-Driven Patterns
+
+### Navigation
+
+Navigation is **driven by configuration**, not hard-coded:
+
+```typescript
+// src/config/navigation.ts
+export const navLinks: NavLink[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/projects' },
+  // ...
+];
+
+// Components map over config
+{navLinks.map((link) => (
+  <NavLink key={link.href} to={link.href}>
+    {link.label}
+  </NavLink>
+))}
+```
+
+**Benefits**:
+- New routes added via config update
+- No code changes needed
+- Single source of truth
+- Follows Open/Closed Principle
+
+### Site Configuration
+
+All site-wide settings in `src/config/site.config.ts`:
+
+- Personal information (name, role, tagline)
+- SEO metadata
+- Feature flags
+- Professional links
+
+**Usage**: Components import and use config, never hard-code values
+
+## Data Layer Separation
+
+### Pure Data Files
+
+All content in `src/data/` directory:
+
+- `projects.ts`: Project data
+- `skills.ts`: Skills data
+- `socials.ts`: Social media links
+
+**Rules**:
+- Pure data only (no logic)
+- Type-safe with TypeScript interfaces
+- Easy to update without touching components
+- Use `readonly` or `as const` for immutability
+
+### Data Flow
+
+1. Data defined in `src/data/*.ts`
+2. Pages import data
+3. Pages pass data to sections via props
+4. Sections render UI using data
+
+## Routing Architecture
+
+### Layout Wrapper
+
+All routes wrapped in `Layout` component:
+
+```typescript
+<Route element={<Layout />}>
+  <Route index element={<HomePage />} />
+  <Route path="projects" element={<ProjectsPage />} />
+  {/* ... */}
+</Route>
+```
+
+**Benefits**:
+- Sticky navigation persists across routes
+- Consistent layout
+- No layout shift on navigation
+
+### Route Structure
+
+- `/` - Home page (hero + featured projects)
+- `/projects` - All projects grid
+- `/about` - Bio + skills
+- `/contact` - Contact info + form
+- `/privacy` - Privacy policy
+- `/terms` - Terms of service
+
+### Future Routes
+
+Adding new routes:
+1. Create page component in `src/pages/`
+2. Add route in `App.tsx`
+3. Add to `navigation.ts` config
+4. No changes to existing code (OCP)
+
+## Theme Architecture
+
+### Theme Context
+
+- Default: Dark mode
+- Persistence: localStorage
+- Context: `ThemeContext` in `src/contexts/`
+- Hook: `useTheme()` for accessing theme
+
+### Theme Toggle
+
+- Extract to `components/ui/ThemeToggle.tsx` for reuse
+- Used in Navbar and Sidebar
+- Follows SRP (single responsibility)
+
+## SEO Architecture
+
+### SEO Component
+
+Each page uses `<SEO />` component:
+
+```typescript
+<SEO
+  title="Page Title"
+  description="Page description"
+  keywords="keyword1, keyword2"
+/>
+```
+
+**Benefits**:
+- Consistent SEO across pages
+- Dynamic metadata
+- Easy to maintain
+
+## Extension Points
+
+### Adding New Features
+
+1. **New Page**: Create page component, add route, update nav config
+2. **New Section**: Create in `sections/`, compose in pages
+3. **New Component**: Add to `ui/` or appropriate directory
+4. **New Data Type**: Add interface to `types/`, data file to `data/`
+
+### No Breaking Changes
+
+- New features added via new modules
+- Existing code remains unchanged
+- Follows Open/Closed Principle

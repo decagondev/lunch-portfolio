@@ -1,0 +1,383 @@
+Description: Component standards, patterns, and best practices
+Globs: src/components/**/*.{ts,tsx}
+
+# Component Standards
+
+## Component Structure
+
+### File Organization
+
+Components organized by purpose:
+
+- **`layout/`**: Layout components (Navbar, Sidebar, Footer, Layout)
+- **`ui/`**: Atomic reusable components (ProjectCard, SocialLinks, SkillBadge)
+- **`sections/`**: Composable page sections (HeroSection, ProjectsTeaser)
+- **`seo/`**: SEO-related components
+
+### Component File Structure
+
+```typescript
+// 1. Imports (React, libraries, components, types)
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { Project } from "@/types";
+
+// 2. Props interface (if needed)
+interface ComponentProps {
+  prop1: string;
+  prop2?: number;
+}
+
+// 3. Component with JSDoc
+/**
+ * ComponentName component
+ * Description of what it does
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ComponentName prop1="value" />
+ * ```
+ */
+export function ComponentName({ prop1, prop2 }: ComponentProps) {
+  // 4. Component logic
+  // 5. Return JSX
+  return <div>{/* ... */}</div>;
+}
+```
+
+## Single Responsibility Principle (SRP)
+
+Each component should have **one clear purpose**:
+
+### ✅ Good Examples
+
+- `ProjectCard`: Only displays project information
+- `SocialLinks`: Only renders social media links
+- `HeroSection`: Only handles hero section layout and content
+- `Navbar`: Only handles navigation bar
+
+### ❌ Bad Examples
+
+- Component that fetches data AND renders UI (separate concerns)
+- Component that handles multiple unrelated UI concerns
+- Component with business logic mixed with presentation
+
+## Component Types
+
+### Atomic Components (`ui/`)
+
+**Purpose**: Small, focused, reusable UI elements
+
+**Characteristics**:
+- Single responsibility
+- Typed props from `src/types/`
+- No business logic
+- Highly reusable
+- Examples: `ProjectCard`, `SocialLinks`, `SkillBadge`
+
+**Example**:
+```typescript
+interface ProjectCardProps {
+  project: Project;
+  className?: string;
+  variant?: "default" | "compact" | "featured";
+}
+
+export function ProjectCard({ project, className, variant }: ProjectCardProps) {
+  // Only renders project info, no data fetching or business logic
+  return <Card>{/* ... */}</Card>;
+}
+```
+
+### Section Components (`sections/`)
+
+**Purpose**: Composable UI blocks for pages
+
+**Characteristics**:
+- Handle layout and styling
+- Accept data via props
+- Can be used across multiple pages
+- Examples: `HeroSection`, `ProjectsTeaser`, `ProjectsGrid`
+
+**Example**:
+```typescript
+interface ProjectsTeaserProps {
+  projects: readonly Project[];
+  limit?: number;
+}
+
+export function ProjectsTeaser({ projects, limit = 3 }: ProjectsTeaserProps) {
+  const displayProjects = projects.slice(0, limit);
+  return (
+    <section>
+      {/* Section layout and styling */}
+    </section>
+  );
+}
+```
+
+### Layout Components (`layout/`)
+
+**Purpose**: Structure and navigation
+
+**Characteristics**:
+- Shared across all pages
+- Handle navigation state
+- Provide consistent layout
+- Examples: `Navbar`, `Sidebar`, `Footer`, `Layout`
+
+## Props Interface Design
+
+### Interface Segregation Principle (ISP)
+
+Use **narrow, focused interfaces**:
+
+```typescript
+// ✅ Good: Narrow interface with only needed props
+interface ProjectCardProps {
+  project: Project;  // Single project object
+  className?: string;
+  variant?: "default" | "compact" | "featured";
+}
+
+// ❌ Bad: Too many unrelated props
+interface ProjectCardProps {
+  project: Project;
+  user: User;
+  settings: Settings;
+  onSave: () => void;
+  onDelete: () => void;
+  // Too many responsibilities
+}
+```
+
+### Optional Props
+
+Use `?` for optional props:
+
+```typescript
+interface ComponentProps {
+  required: string;
+  optional?: number;
+  variant?: "default" | "primary";
+}
+```
+
+### Default Props
+
+Provide defaults when appropriate:
+
+```typescript
+export function Component({
+  variant = "default",
+  size = "md",
+}: ComponentProps) {
+  // ...
+}
+```
+
+## Type Safety
+
+### Use TypeScript Interfaces
+
+All component props should be typed:
+
+```typescript
+// ✅ Good: Typed props
+interface SocialLinksProps {
+  socials: readonly SocialLink[];
+  orientation?: "horizontal" | "vertical";
+}
+
+// ❌ Bad: Untyped props
+function SocialLinks(props: any) {
+  // ...
+}
+```
+
+### Import Types
+
+Use `type` keyword for type-only imports:
+
+```typescript
+import type { Project, Skill } from "@/types";
+```
+
+### Shared Types
+
+Define shared types in `src/types/index.ts`:
+
+```typescript
+// src/types/index.ts
+export interface Project {
+  id: string;
+  title: string;
+  // ...
+}
+
+// Component uses shared type
+import type { Project } from "@/types";
+```
+
+## Component Composition
+
+### Compose, Don't Inherit
+
+Build complex UIs by composing simple components:
+
+```typescript
+// ✅ Good: Composition
+export function HomePage() {
+  return (
+    <>
+      <SEO {...homeSeo} />
+      <HeroSection />
+      <ProjectsTeaser projects={projects} limit={3} />
+    </>
+  );
+}
+
+// ❌ Bad: Monolithic component
+export function HomePage() {
+  return (
+    <div>
+      {/* All UI logic in one component */}
+    </div>
+  );
+}
+```
+
+## Data Flow
+
+### Props Down, Events Up
+
+- **Props**: Data flows down from parent to child
+- **Events**: User interactions flow up via callbacks
+
+```typescript
+// Parent passes data down
+<ProjectCard project={projectData} />
+
+// Child receives data via props
+function ProjectCard({ project }: ProjectCardProps) {
+  // Use project data
+}
+```
+
+### No Direct Data Fetching in Components
+
+Components receive data via props, don't fetch directly:
+
+```typescript
+// ✅ Good: Data passed via props
+export function ProjectsTeaser({ projects }: ProjectsTeaserProps) {
+  return <div>{/* Use projects prop */}</div>;
+}
+
+// ❌ Bad: Component fetches data
+export function ProjectsTeaser() {
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    fetchProjects().then(setProjects);
+  }, []);
+  // ...
+}
+```
+
+## Styling Patterns
+
+### Tailwind CSS
+
+Use Tailwind utility classes for styling:
+
+```typescript
+<div className="container mx-auto px-4 py-8">
+  <h1 className="text-3xl font-bold text-foreground">
+    Title
+  </h1>
+</div>
+```
+
+### Conditional Classes
+
+Use `cn()` utility for conditional classes:
+
+```typescript
+import { cn } from "@/lib/utils";
+
+<div className={cn(
+  "base-classes",
+  variant === "primary" && "primary-classes",
+  className
+)}>
+```
+
+### Responsive Design
+
+Mobile-first approach:
+
+```typescript
+<div className="
+  text-sm          // Mobile
+  md:text-base     // Tablet
+  lg:text-lg       // Desktop
+">
+```
+
+## Component Examples
+
+### Atomic Component Example
+
+```typescript
+import type { SocialLink } from "@/types";
+
+interface SocialLinksProps {
+  socials: readonly SocialLink[];
+  orientation?: "horizontal" | "vertical";
+  size?: "sm" | "default" | "lg";
+}
+
+export function SocialLinks({
+  socials,
+  orientation = "horizontal",
+  size = "default",
+}: SocialLinksProps) {
+  // Component implementation
+}
+```
+
+### Section Component Example
+
+```typescript
+import { ProjectCard } from "@/components/ui/ProjectCard";
+import type { Project } from "@/types";
+
+interface ProjectsTeaserProps {
+  projects: readonly Project[];
+  limit?: number;
+}
+
+export function ProjectsTeaser({ projects, limit = 3 }: ProjectsTeaserProps) {
+  const displayProjects = projects.slice(0, limit);
+  return (
+    <section className="py-16">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {displayProjects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
+      </div>
+    </section>
+  );
+}
+```
+
+## Best Practices
+
+1. **Keep components small**: Single responsibility
+2. **Use TypeScript**: Full type coverage
+3. **Compose components**: Build complex UIs from simple parts
+4. **Props from config/data**: No hard-coded values
+5. **JSDoc comments**: Document complex components
+6. **Reusable**: Design for reuse across pages
+7. **Accessible**: Use semantic HTML, ARIA labels when needed
