@@ -1,38 +1,40 @@
-import { useState, type ReactNode } from "react"
-import { Navbar } from "./Navbar"
-import { Sidebar } from "./Sidebar"
-import { Footer, type FooterConfig } from "./Footer"
-import { cn } from "@/lib/utils"
-
-interface LayoutProps {
-  children: ReactNode
-  footerConfig?: FooterConfig
-}
+import { Outlet } from "react-router-dom";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 /**
- * Main layout component that composes navbar, sidebar, and footer
- * Follows Composition over Inheritance principle
+ * Layout Component
+ * Main application layout wrapper with sticky navbar, mobile sidebar, footer, and toast notifications
+ *
+ * Features:
+ * - Sticky navigation that persists across all routes
+ * - Mobile-responsive sidebar with backdrop
+ * - Footer with site navigation and social links
+ * - Toast notification system
+ * - Smooth page transitions
+ * - Proper spacing and responsive design
+ *
+ * Architecture:
+ * - Uses <Outlet /> for nested route rendering
+ * - Manages mobile sidebar state
+ * - Ensures consistent UX across all pages
+ *
+ * @component
  */
-export function Layout({ children, footerConfig }: LayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true) // Default to open
-
-  const toggleSidebar = () => {
-    setSidebarOpen((prev) => !prev)
-  }
-
+export function Layout() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar onMenuClick={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <main
-        className={cn(
-          "flex-1 transition-all duration-300 pt-0",
-          sidebarOpen ? "ml-64" : "ml-12"
-        )}
-      >
-        {children}
+    <div className="relative flex min-h-screen flex-col">
+      {/* Sticky Navbar - Desktop */}
+      <Navbar />
+
+      {/* Main Content Area */}
+      <main className="flex-1">
+        {/* Outlet renders the current route's component */}
+        <Outlet />
       </main>
-      <Footer config={footerConfig} />
+
+      {/* Footer */}
+      <Footer />
     </div>
-  )
+  );
 }
