@@ -5,7 +5,7 @@
 
 ## Current Status
 
-**Phase**: Core Functionality Complete (Epic 1, 3-6 Complete, Epic 2 Next)
+**Phase**: Core Functionality Complete (Epic 1, 2, 3-6 Complete, Epic 7 Next)
 
 ## What Works
 
@@ -101,15 +101,35 @@
   - Level-based color coding (expert, proficient, familiar)
   - Optional level indicator
   - Consistent Badge styling
+- ✅ `src/components/ui/ThemeToggle.tsx`: Complete
+  - Reusable theme toggle component
+  - Uses useTheme hook from ThemeContext
+  - Lucide-react icons (Sun, Moon)
+  - Customizable variant and size props
+  - Proper ARIA labels
 
 #### Layout
 - ✅ `src/components/layout/Layout.tsx`: Complete
   - Wraps all routes
-  - Includes Navbar, Sidebar, Footer
+  - Includes Navbar, Footer
   - Uses Outlet for nested routing
-- ✅ `src/components/layout/Navbar.tsx`: Exists but needs config-driven update
-- ✅ `src/components/layout/Sidebar.tsx`: Exists but needs config-driven update
-- ✅ `src/components/layout/Footer.tsx`: Exists
+- ✅ `src/components/layout/Navbar.tsx`: Complete (config-driven)
+  - Uses `navLinks` from config
+  - NavLink with active state styling
+  - ThemeToggle integrated
+  - Site name from siteConfig
+- ✅ `src/components/layout/Sidebar.tsx`: Complete (config-driven)
+  - Uses `navLinks` from config
+  - NavLink with active state styling
+  - Lucide-react icons (replaced emoji icons)
+  - ThemeToggle integrated
+  - Supports expanded and collapsed states
+- ✅ `src/components/layout/Footer.tsx`: Complete (config-driven)
+  - Uses `navLinks` and `legalLinks` from config
+  - Uses `siteConfig` for name and email
+  - Uses `socials` from data
+  - Dynamic copyright with current year
+  - SocialLinks component integrated
 
 #### Theme
 - ✅ `src/contexts/ThemeContext.tsx`: Complete
@@ -137,12 +157,26 @@
 - [ ] Document Context7 MCP usage rule
 - [ ] Document memory bank maintenance procedures
 
-### 📋 Epic 2: Navigation & Layout Refinements
-- [ ] Update Navbar.tsx to use config-driven navigation from `src/config/navigation.ts`
-- [ ] Update Sidebar.tsx to use config-driven navigation from `src/config/navigation.ts`
-- [ ] Extract ThemeToggle to `src/components/ui/ThemeToggle.tsx`
-- [ ] Update Footer.tsx to use navLinks and socials from data
-- [ ] Add dynamic copyright to Footer
+### ✅ Epic 2: Navigation & Layout Refinements (COMPLETE)
+- [x] Update Navbar.tsx to use config-driven navigation from `src/config/navigation.ts`
+  - NavLink with active state styling implemented
+  - ThemeToggle integrated
+  - Site name from siteConfig
+- [x] Update Sidebar.tsx to use config-driven navigation from `src/config/navigation.ts`
+  - NavLink with active state styling implemented
+  - Lucide-react icons (replaced emoji icons)
+  - ThemeToggle integrated
+  - Supports expanded and collapsed states
+- [x] Extract ThemeToggle to `src/components/ui/ThemeToggle.tsx`
+  - Reusable component with useTheme hook
+  - Lucide-react icons (Sun, Moon)
+  - Customizable props (variant, size, className)
+- [x] Update Footer.tsx to use navLinks and socials from data
+  - navLinks and legalLinks from config
+  - socials from data
+  - SocialLinks component integrated
+- [x] Add dynamic copyright to Footer
+  - Uses siteConfig.name and current year
 
 ### ✅ Epic 3: Atomic Reusable UI Components (COMPLETE)
 - [x] Create `src/components/ui/SkillBadge.tsx`
@@ -216,11 +250,11 @@
 
 - **Total Projects**: 10 (example data)
 - **Total Skills**: 40+ (organized by category)
-- **Components Created**: 15+ (HeroSection, ProjectsTeaser, ProjectsGrid, BioSection, SkillsSection, ContactInfo, ContactForm, ProjectCard, SocialLinks, SkillBadge, Layout, Navbar, Sidebar, Footer, SEO)
+- **Components Created**: 16+ (HeroSection, ProjectsTeaser, ProjectsGrid, BioSection, SkillsSection, ContactInfo, ContactForm, ProjectCard, SocialLinks, SkillBadge, ThemeToggle, Layout, Navbar, Sidebar, Footer, SEO)
 - **Pages Created**: 6 (HomePage, ProjectsPage, AboutPage, ContactPage, PrivacyPolicyPage, TermsOfServicePage)
 - **Routes Active**: 6 (/, /projects, /about, /contact, /privacy, /terms)
 - **Config Files**: 3 (site.config.ts, app.config.ts, navigation.ts)
 - **Data Files**: 3 (projects.ts, socials.ts, skills.ts)
-- **Epics Completed**: 4 (Epic 1 - Foundation & Configuration, Epic 3 - UI Components, Epic 4 - Page Sections, Epic 5 - Pages, Epic 6 - Routing)
+- **Epics Completed**: 5 (Epic 1 - Foundation & Configuration, Epic 2 - Navigation & Layout Refinements, Epic 3 - UI Components, Epic 4 - Page Sections, Epic 5 - Pages, Epic 6 - Routing)
 - **Epics In Progress**: 0
 

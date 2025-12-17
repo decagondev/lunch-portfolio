@@ -1,81 +1,74 @@
 # Active Context
 
-**Last Updated**: December 17, 2025 (Epic 3-6 Complete)  
+**Last Updated**: December 17, 2025 (Epic 2 Complete)  
 **When to Update**: At the start of each significant task, after completing features, when work focus changes
 
 ## Current Work Focus
 
-**Epic 3-6: Components, Sections, Pages & Routing** (COMPLETE)
+**Epic 2: Navigation & Layout Refinements** (COMPLETE)
 
-All core portfolio functionality is now wired up:
-- ✅ All UI components created (SkillBadge)
-- ✅ All section components created (ProjectsGrid, BioSection, SkillsSection, ContactInfo)
-- ✅ ContactForm bug fixed
-- ✅ All pages created/updated (ProjectsPage, AboutPage, ContactPage)
-- ✅ All routes wired up in App.tsx
+All navigation components are now config-driven:
+- ✅ ThemeToggle component extracted and reusable
+- ✅ Navbar uses config-driven navigation with NavLink active states
+- ✅ Sidebar uses config-driven navigation with lucide-react icons
+- ✅ Footer uses config and data for all content
+- ✅ All components follow SOLID principles
 
-**Next: Epic 2 - Navigation & Layout Refinements** (Config-driven navigation)
+**Next: Epic 7 - Polish, Accessibility & Deployment**
 
 ## Recent Changes
 
-### Completed (Epic 3-6 - Components, Sections, Pages & Routing)
-- ✅ **Epic 3**: Created `SkillBadge` component with level-based color coding
-- ✅ **Epic 4**: Created all section components:
-  - `ProjectsGrid.tsx` - Full projects grid layout
-  - `BioSection.tsx` - Bio text with prose styling
-  - `SkillsSection.tsx` - Skills grid with SkillBadge
-  - `ContactInfo.tsx` - Contact information card
-  - Fixed `ContactForm.tsx` bug (return statement was inside handleSubmit)
-- ✅ **Epic 5**: Created/updated all pages:
-  - `ProjectsPage.tsx` - Full projects showcase
-  - `AboutPage.tsx` - Updated to use BioSection and SkillsSection
-  - `ContactPage.tsx` - Uncommented and wired up with ContactInfo and ContactForm
-- ✅ **Epic 6**: All routes wired up in `App.tsx`:
-  - HomePage (/)
-  - ProjectsPage (/projects)
-  - AboutPage (/about)
-  - ContactPage (/contact)
-  - PrivacyPolicyPage (/privacy)
-  - TermsOfServicePage (/terms)
+### Completed (Epic 2 - Navigation & Layout Refinements)
+- ✅ **PR 2.1**: Config-driven Navbar & Sidebar + ThemeToggle extraction
+  - Created `ThemeToggle.tsx` component with useTheme hook and lucide-react icons
+  - Updated `Navbar.tsx` to use `navLinks` from config with NavLink active states
+  - Updated `Sidebar.tsx` to use `navLinks` from config, replaced emoji icons with lucide-react icons
+  - Integrated ThemeToggle in both Navbar and Sidebar
+- ✅ **PR 2.2**: Enhanced Footer with config and social links
+  - Updated `Footer.tsx` to use `navLinks`, `legalLinks`, and `siteConfig` from config
+  - Fixed legal link paths (`/privacy` and `/terms` instead of `/privacy-policy` and `/terms-of-service`)
+  - Added dynamic copyright using `siteConfig.name` and current year
+  - Integrated `SocialLinks` component with socials from data
+  - Added email link from `siteConfig.email`
 
-### In Progress
-- 🚧 Navigation: Navbar and Sidebar still have hardcoded navItems (need to use `src/config/navigation.ts`)
+### Previously Completed (Epic 3-6 - Components, Sections, Pages & Routing)
+- ✅ **Epic 3**: Created `SkillBadge` component with level-based color coding
+- ✅ **Epic 4**: Created all section components (ProjectsGrid, BioSection, SkillsSection, ContactInfo, ContactForm)
+- ✅ **Epic 5**: Created/updated all pages (ProjectsPage, AboutPage, ContactPage)
+- ✅ **Epic 6**: All routes wired up in `App.tsx`
 
 ## Next Steps
 
-### Immediate (Epic 2 - Navigation & Layout Refinements)
-1. Update Navbar.tsx to use `navLinks` from `src/config/navigation.ts`
-2. Update Sidebar.tsx to use `navLinks` from `src/config/navigation.ts`
-3. Extract ThemeToggle to `src/components/ui/ThemeToggle.tsx` for reuse
-4. Update Footer.tsx to use navLinks and socials from data/config
-5. Add dynamic copyright to Footer using siteConfig.name
-
-### Future Epics
-- Epic 2: Config-driven navigation (Navbar, Sidebar, Footer updates)
-- Epic 7: Polish, Accessibility & Deployment
+### Immediate (Epic 7 - Polish, Accessibility & Deployment)
+1. Create SEO config or inline objects for each page
+2. Ensure all pages have SEO props
+3. Add alt text to all images
+4. Audit accessibility (contrast, focus states, ARIA labels)
+5. Update README.md with project description
+6. Run final lint, format, type-check
+7. Verify Netlify deployment
 
 ## Active Decisions & Considerations
 
-1. **Theme Toggle**: Extract to `components/ui/ThemeToggle.tsx` for reuse in Navbar and Sidebar
-2. **Navigation Integration**: Navbar and Sidebar need to be updated to use `navLinks` from config (Epic 2)
-3. **Project Content**: Current projects are examples - need real project data (can be updated later)
-4. **Skills Display**: Skills data is ready for use in SkillsSection component (Epic 4)
+1. **Navigation**: All navigation components now use config-driven approach (OCP principle)
+2. **Theme Toggle**: Extracted to reusable component, used in Navbar and Sidebar
+3. **Footer**: Fully config-driven with dynamic copyright and social links
+4. **Project Content**: Current projects are examples - need real project data (can be updated later)
 
 ## Blockers & Dependencies
 
 - None currently
-- Epic 2 can proceed immediately (Epic 1 foundation is complete)
-- Epic 4 depends on skills.ts data (now available)
-- Epic 5 depends on navigation config (now available)
+- Epic 7 can proceed immediately (all core functionality complete)
 
 ## Current Architecture State
 
-- **Layout**: Sticky Navbar (desktop), collapsible Sidebar (mobile), Footer
-- **Theme**: Dark mode default with ThemeContext and localStorage persistence
-- **Routing**: React Router with Layout wrapper, all core routes active (Home, Projects, About, Contact, Privacy, Terms)
+- **Layout**: Sticky Navbar (desktop, config-driven), collapsible Sidebar (mobile, config-driven), Footer (config-driven)
+- **Theme**: Dark mode default with ThemeContext, ThemeToggle component extracted and reusable
+- **Navigation**: Config-driven via `navigation.ts`, NavLink active states, all 4 main routes (Home, Projects, About, Contact)
+- **Routing**: React Router with Layout wrapper, all core routes active
 - **Data**: Centralized in `src/data/` directory (projects.ts, socials.ts, skills.ts)
-- **Config**: Site config and navigation config complete (site.config.ts, navigation.ts)
+- **Config**: Site config and navigation config complete and actively used
 - **Components**: Modular structure with layout/, ui/, sections/ directories
 - **Pages**: All core pages implemented (HomePage, ProjectsPage, AboutPage, ContactPage)
-- **Sections**: All section components created (HeroSection, ProjectsTeaser, ProjectsGrid, BioSection, SkillsSection, ContactInfo, ContactForm)
+- **Sections**: All section components created and functional
 

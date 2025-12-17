@@ -1,59 +1,40 @@
-import { Link, useLocation } from "react-router-dom";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { navLinks } from "@/config/navigation";
+import { siteConfig } from "@/config/site.config";
 import { cn } from "@/lib/utils";
 
-interface NavbarProps {
-  onMenuClick?: () => void;
-}
-
 /**
- * Sticky navbar component with theme toggle
- * Follows Open/Closed Principle - extensible via props
+ * Sticky navbar component with config-driven navigation and theme toggle
+ * Follows Open/Closed Principle - extensible via navigation config
+ * Follows Dependency Inversion Principle - depends on config abstraction
  */
-export function Navbar({ onMenuClick }: NavbarProps) {
-  const location = useLocation();
-
-  const navItems = [
-    { path: "/", label: "Home" },
-    { path: "/about", label: "About" },
-  ];
-
+export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-4">
-          {onMenuClick && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onMenuClick}
-              className="lg:hidden"
-              aria-label="Toggle menu"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          )}
-          <Link to="/" className="flex items-center gap-2 font-semibold">
-            <span className="text-xl">YourApp</span>
-          </Link>
-        </div>
+        <NavLink to="/" className="flex items-center gap-2 font-semibold">
+          <span className="text-xl">{siteConfig.name}</span>
+        </NavLink>
 
-        <div className="hidden items-center gap-6 lg:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
-                location.pathname === item.path
-                  ? "text-foreground"
-                  : "text-muted-foreground"
-              )}
+        <div className="flex items-center gap-6">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.href}
+              to={link.href}
+              className={({ isActive }) =>
+                cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  isActive
+                    ? "text-foreground font-semibold"
+                    : "text-muted-foreground"
+                )
+              }
             >
-              {item.label}
-            </Link>
+              {link.label}
+            </NavLink>
           ))}
+          <ThemeToggle variant="ghost" size="icon" />
         </div>
       </div>
     </nav>

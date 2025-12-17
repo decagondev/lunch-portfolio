@@ -1,6 +1,8 @@
-import { Link, useLocation } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { ChevronRight, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/ui/ThemeToggle"
+import { navLinks } from "@/config/navigation"
 import { cn } from "@/lib/utils"
 
 interface SidebarProps {
@@ -9,17 +11,11 @@ interface SidebarProps {
 }
 
 /**
- * Collapsible sidebar component with chevron toggle
+ * Collapsible sidebar component with config-driven navigation
  * Follows Single Responsibility Principle - handles sidebar navigation only
+ * Follows Dependency Inversion Principle - depends on navigation config
  */
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
-  const location = useLocation()
-
-  const navItems = [
-    { path: "/", label: "Home", icon: "🏠" },
-    { path: "/about", label: "About", icon: "ℹ️" },
-  ]
-
   return (
     <>
       {/* Overlay for mobile */}
@@ -60,48 +56,66 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
           </div>
 
           <nav className="flex flex-col gap-1 p-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => {
-                  // Close on mobile when clicking a link
-                  if (window.innerWidth < 1024) {
-                    onToggle()
+            {navLinks.map((link) => {
+              const Icon = link.icon
+              return (
+                <NavLink
+                  key={link.href}
+                  to={link.href}
+                  onClick={() => {
+                    // Close on mobile when clicking a link
+                    if (window.innerWidth < 1024) {
+                      onToggle()
+                    }
+                  }}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    )
                   }
-                }}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  location.pathname === item.path
-                    ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                )}
-              >
-                <span>{item.icon}</span>
-                {isOpen && <span>{item.label}</span>}
-              </Link>
-            ))}
+                >
+                  {Icon && <Icon className="h-5 w-5" />}
+                  {isOpen && <span>{link.label}</span>}
+                </NavLink>
+              )
+            })}
+            {isOpen && (
+              <div className="mt-4 pt-4 border-t">
+                <ThemeToggle variant="ghost" size="default" className="w-full justify-start" />
+              </div>
+            )}
           </nav>
         </div>
 
         {/* Collapsed Icon View */}
         {!isOpen && (
           <div className="flex flex-col gap-2 p-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  "flex items-center justify-center rounded-md p-2 text-lg transition-colors",
-                  location.pathname === item.path
-                    ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                )}
-                title={item.label}
-              >
-                <span>{item.icon}</span>
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const Icon = link.icon
+              return (
+                <NavLink
+                  key={link.href}
+                  to={link.href}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center justify-center rounded-md p-2 transition-colors",
+                      isActive
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    )
+                  }
+                  title={link.label}
+                >
+                  {Icon && <Icon className="h-5 w-5" />}
+                </NavLink>
+              )
+            })}
+            <div className="mt-2 pt-2 border-t">
+              <ThemeToggle variant="ghost" size="icon" />
+            </div>
           </div>
         )}
       </aside>

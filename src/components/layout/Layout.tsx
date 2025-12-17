@@ -4,31 +4,30 @@ import { Footer } from "@/components/layout/Footer";
 
 /**
  * Layout Component
- * Main application layout wrapper with sticky navbar, mobile sidebar, footer, and toast notifications
+ * Main application layout wrapper with sticky navbar and footer
  *
  * Features:
  * - Sticky navigation that persists across all routes
- * - Mobile-responsive sidebar with backdrop
  * - Footer with site navigation and social links
- * - Toast notification system
  * - Smooth page transitions
  * - Proper spacing and responsive design
+ * - Centered content with max-width constraints
  *
  * Architecture:
  * - Uses <Outlet /> for nested route rendering
- * - Manages mobile sidebar state
  * - Ensures consistent UX across all pages
+ * - Content is centered using container classes in sections
  *
  * @component
  */
 export function Layout() {
   return (
     <div className="relative flex min-h-screen flex-col">
-      {/* Sticky Navbar - Desktop */}
+      {/* Sticky Navbar */}
       <Navbar />
 
-      {/* Main Content Area */}
-      <main className="flex-1">
+      {/* Main Content Area - Centered */}
+      <main className="flex-1 w-full">
         {/* Outlet renders the current route's component */}
         <Outlet />
       </main>
